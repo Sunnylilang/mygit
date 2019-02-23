@@ -1,31 +1,40 @@
 <!doctype html>
 <html>
 <head>
+<title>Home</title>
     {% load static %}
-    <title>Home</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="keywords" content="" />
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-    <!-- font files  -->
-    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
-    <!-- /font files  -->
-    <!-- css files -->
-    <link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css' media="all" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- font files  -->
+<link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+<!-- /font files  -->
+<!-- css files -->
+<link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css' media="all" />
 <!-- /css files -->
+<style>
+    .ajaximg {height: 30px;position: relative;right: -444px;top:-37px}
+    .ajaxText {;position: relative;top:-25px; }
+    ::-webkit-input-placeholder {color: honeydew}
+    #capAjax {position: relative;right: 210px;  top: 11px;}
+    #capAjaxText{top: 10px;  left: -115px;}
+</style>
 </head>
 <body>
 <h1>Register</h1>
 <div class="log">
 	<div class="content2">
 		<h2>Register</h2>
-		<form>
-			<input type="text" name="userid" value="USERNAME" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'NAME AND SURNAME';}">
-			<input type="tel" name="usrtel" value="PHONE" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PHONE';}">
-			<input type="email" name="email" value="EMAIL ADDRESS" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'EMAIL ADDRESS';}">
-			<input type="password" name="psw" value="PASSWORD" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">
-			<input type="submit" class="register" value="Register">
+		<form id="userInfo" method="post" action="{% url 'registerAction' %}">
+            {% csrf_token %}
+            <input type="text"  name="userid" placeholder="USERNAME" onfocus="userFocus()" onblur="userChecking()"><span><img id="userAjax" class="ajaximg" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="userAjaxText"></span></span>
+			<input type="tel" name="usrtel" placeholder="PHONE" onfocus="phoneFocus()" onblur="telephonechecking()"><img id="phoneAjax" class="ajaximg" style="display:none" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="phoneAjaxText"></span>
+			<input type="email" name="email" placeholder="EMAIL ADDRESS" onfocus="emailFocus()" onblur="emailchecking()"><img class="ajaximg" id="emailAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="emailAjaxText"></span>
+			<input type="password" name="psw" placeholder="PASSWORD(6~16 letters and number)" onfocus="pwdFocus()" onblur="pwdchecking()"><img  class="ajaximg" id="pwdAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="pwdAjaxText"></span>
+            <input type="text" style="width:100px;float: left;margin-left: 47px;" name="captcha" onfocus="capFocus()" onblur="capchecking()"><a onclick="capchange()" href="javascript:void(0);"><img style="float: left;position: relative;top: 15px;margin-left: 69px" id="captchaPic" src="{% url 'getCaptcha' %}"></a><img  class="ajaximg"  id="capAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="capAjaxText"></span>
+			<input onclick= "submitInfo()" type="button" class="register" value="Register">
 		</form>
 	</div>
 	<div class="clear"></div>
@@ -33,6 +42,221 @@
 <div class="footer">
 	<p>Copyright &copy;  <a href="http://www.baizhiedu.com/" target="_blank" title="百知教育">百知教育</a></p>
 </div>
+<script>
+    var userajaximg=document.getElementById("userAjax");
+    var phoneajaximg=document.getElementById("phoneAjax");
+    var emailajaximg=document.getElementById("emailAjax");
+    var pwdajaximg=document.getElementById("pwdAjax");
+    var capajaximg=document.getElementById("capAjax");
+    var userajaxText=document.getElementById("userAjaxText");
+    var phoneajaxText=document.getElementById("phoneAjaxText");
+    var emailajaxText=document.getElementById("emailAjaxText");
+    var pwdajaxText=document.getElementById("pwdAjaxText");
+    var capajaxText=document.getElementById("capAjaxText");
+    var flag1=0;
+    var flag2=0;
+    var flag3=0;
+    var flag4=0;
+    var flag5=0;
+    function userFocus() {
+        userajaximg.src="{% static 'images/runningchecking.gif' %}";
+        userajaximg.style="display:none";
+        userajaxText.innerHTML='';
+        flag1=0;
+    }
+    function phoneFocus() {
+
+        phoneajaximg.src="{% static 'images/runningchecking.gif' %}";
+        phoneajaximg.style="display:none";
+        phoneajaxText.innerHTML='';
+        flag2=0;
+    }
+    function emailFocus() {
+        emailajaximg.src="{% static 'images/runningchecking.gif' %}";
+        emailajaximg.style="display:none";
+        emailajaxText.innerHTML='';
+        flag3=0;
+    }
+    function pwdFocus() {
+        pwdajaximg.src="{% static 'images/runningchecking.gif' %}";
+        pwdajaximg.style="display:none";
+        pwdajaxText.innerHTML='';
+        flag4=0;
+    }
+    function capFocus() {
+        capajaximg.src="{% static 'images/runningchecking.gif' %}";
+        capajaximg.style="display:none";
+        capajaxText.innerHTML='';
+        flag5=0;
+    }
+
+    function userChecking() {
+         var userid=document.getElementsByName("userid")[0].value;
+         userajaximg.style="display:block";
+        console.log(userid);
+        if (userid==''){
+            setTimeout(function () {
+                userajaximg.src='{% static "images/wrong.png" %}';
+                userajaxText.innerHTML='<font size="3" color="red">can not be blank!!<font>';
+                userajaxText.style="display:inline-block";
+            },1500);
+        }else{
+            var xhr;
+            if (window.XMLHttpRequest){
+                xhr=new XMLHttpRequest()
+            }else if(window.ActiveXObject){
+                xhr=new ActiveXObject("Microsoft.XMLHTTP")
+            }
+            xhr.open('post',"{% url 'registerChecking' %}",true);
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send("userid="+userid+"&csrfmiddlewaretoken="+"{{ csrf_token }}");
+            xhr.onreadystatechange=function () {
+                if (xhr.status==200 && xhr.readyState==4){
+                    console.log(xhr.responseText);
+                    if(xhr.responseText=="exist"){
+                        userajaximg.src='{% static "images/wrong.png" %}';
+                        userajaxText.innerHTML='<font size="3" color="red">User already exist!!!<font>';
+                        userajaxText.style="display:inline-block";
+                    }else  if(xhr.responseText=="noexist"){
+                        userajaximg.src='{% static "images/right.jpg" %}';
+                        flag1=1
+                    }
+                }
+            }
+        }
+    }
+    function telephonechecking() {
+        var usertel=document.getElementsByName("usrtel")[0].value;
+        phoneajaximg.style="display:block";
+        if (usertel==''){
+        setTimeout(function () {
+           phoneajaximg.src='{% static "images/wrong.png" %}';
+                phoneajaxText.innerHTML='<font size="3" color="red">No blank for phone!!<font>';
+                phoneajaxText.style="display:inline-block";
+            },1500)
+        }else if (!(/^1[34578]\d{9}$/.test(usertel))){
+            setTimeout(function () {
+            phoneajaximg.src='{% static "images/wrong.png" %}';
+                phoneajaxText.innerHTML='<font size="3" color="red">illegal Phone Number!!<font>';
+                phoneajaxText.style="display:inline-block";},1500);
+        }else{
+            setTimeout(function () {
+            phoneajaximg.src='{% static "images/right.jpg" %}';
+            flag2=1},1500);
+        }
+    }
+    function emailchecking() {
+          var email=document.getElementsByName("email")[0].value;
+        emailajaximg.style="display:block";
+        if (email==''){
+        setTimeout(function () {
+           emailajaximg.src='{% static "images/wrong.png" %}';
+                emailajaxText.innerHTML='<font size="3" color="red">No blank for Email!!<font>';
+                emailajaxText.style="display:inline-block";
+            },1500)
+        }else if (!(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})$/.test(email))){
+            setTimeout(function () {
+            emailajaximg.src='{% static "images/wrong.png" %}';
+                emailajaxText.innerHTML='<font size="3" color="red">illegal Email Address!!<font>';
+                emailajaxText.style="display:inline-block";},1500)
+        }else{
+            setTimeout(function () {
+            emailajaximg.src='{% static "images/right.jpg" %}';
+            flag3=1},1500)
+        }
+    }
+    function pwdchecking() {
+        var password=document.getElementsByName("psw")[0].value;
+        pwdajaximg.style="display:block";
+        if (password==''){
+        setTimeout(function () {
+           pwdajaximg.src='{% static "images/wrong.png" %}';
+                pwdajaxText.innerHTML='<font size="3" color="red">Please Set Your Password!!<font>';
+                pwdajaxText.style="display:inline-block";
+            },1500)
+        }else if(/^[\w]{6,16}$/.test(password)){
+                    if(/[a-zA-Z]/.test(password) && !(/[\d]/.test(password))||/[\d]/.test(password) && !(/[a-zA-Z]/.test(password))){
+                        setTimeout(function () {
+                            pwdajaximg.src="{% static "images/right.jpg" %}";
+                            pwdajaxText.innerHTML='<font size="3" color="#FFA700">password is too simple<font>';
+                            flag4=1
+                        },1000)
+                    }else if(/[a-z]/.test(password) && /[A-Z]/.test(password) && /[\d]/.test(password)){
+                        setTimeout(function () {
+                        pwdajaximg.src='{% static "images/right.jpg" %}';
+                            pwdajaxText.innerHTML='<font size="3" color="limegreen">password is too simple(Suggest NUM-LETTERS cooperation)<font>';
+
+                            flag4=1
+                        },1000)
+                    }
+        }else{
+            setTimeout(function () {
+           pwdajaximg.src='{% static "images/wrong.png" %}';
+            pwdajaxText.innerHTML='<font size="3" color="red">Password only contain letter and number!!<font>';
+            pwdajaxText.style="display:inline-block";
+            },1500)
+        }
+    }
+    function capchecking() {
+        var yourcode=document.getElementsByName("captcha")[0].value;
+        capajaximg.style="display:block";
+        var xhr;
+        if (window.XMLHttpRequest){
+                xhr=new XMLHttpRequest()
+            }else if(window.ActiveXObject){
+                xhr=new ActiveXObject("Microsoft.XMLHTTP")
+            }
+          if (yourcode!=''){
+        xhr.open("get","{% url 'captchaChecking' %}?yourcode="+yourcode,true);
+        xhr.send();
+        xhr.onreadystatechange=function () {
+                if (xhr.status==200 && xhr.readyState==4){
+                    var result=xhr.responseText;
+                    if(result=="wrong"){
+                        capajaximg.src='{% static "images/wrong.png" %}';
+                        capajaxText.innerHTML='<font size="3" color="red">Incorrect captcha!<font>';
+                        capajaxText.style="display:inline-block";
+                    }else  if(result=="right"){
+                        capajaximg.src='{% static "images/right.jpg" %}';
+                        flag5=1
+                    }
+                }
+            }
+    }else{
+              setTimeout(function () {
+             capajaximg.src='{% static "images/wrong.png" %}';
+            capajaxText.innerHTML='<font size="3" color="red">Captcha is BLANK!<font>';
+            capajaxText.style="display:inline-block";
+              },1500)
+    }
+    }
+
+    function capchange() {
+        var captPic=document.getElementById("captchaPic");
+        captPic.src="{% url 'getCaptcha' %}?"+new Date().getTime();
+
+    }
+
+
+
+    function submitInfo() {
+        console.log(flag5,flag4,flag3,flag2,flag1);
+        if (flag1 && flag2&&flag3&&flag4&&flag5){
+
+            var formInfo=document.getElementById("userInfo");
+            formInfo.submit()
+        }else{
+            console.log("dddddddddddddddddddddddddddddddddd");
+            userChecking();
+            telephonechecking();
+            emailchecking();
+            pwdchecking();
+            capchecking();
+        }
+    }
+
+
+</script>
 
 </body>
 </html>
