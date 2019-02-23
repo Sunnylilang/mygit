@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    {% load static %}
+<title>Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- font files  -->
+<link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+<!-- /font files  -->
+<!-- css files -->
+<link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css' media="all" />
+<!-- /css files -->
+</head>
+<body>
+<h1>Login</h1>
+<div class="log">
+	<div class="content1">
+		<h2>Login</h2>
+		<form>
+            {% csrf_token %}
+			<input type="text" name="username" value="USERNAME" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}">
+			<input type="password" name="password" value="PASSWORD" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'PASSWORD';}">
+			<div class="button-row">
+				<input type="button" class="sign-in" value="Sign In" onclick="login()">
+				<input type="button" class="reset" value="Regist" onclick="regist()">
+				<div class="clear"></div>
+			</div>
+		</form>
+	</div>
+
+	<div class="clear"></div>
+</div>
+<div class="footer">
+	<p>Copyright &copy;  <a href="http://www.baizhiedu.com/" target="_blank" title="百知教育">百知教育</a></p>
+</div>
+
+</body>
+</html>
+<script type="text/javascript" src="{% static 'scripts/jquery/jquery-1.7.1.js' %}"></script>
+<script type="text/javascript">
+    function login() {
+        var username = $("[name='username']").val();
+        var password = $("[name='password']").val();
+        console.log(username,password);
+        var csrftoken="{{csrf_token}}";
+        $.ajax({
+            type:"post",//请求方式get/post
+            url:"{% url 'login:logic' %}",//请求地址
+            data:"username=" + username + "&password=" + password + "&csrfmiddlewaretoken=" + csrftoken,
+            success:function(res){//abc==xhr.responseText或解析后的js对象
+                console.log(res);
+                if (res == "OK"){
+                    {#location.href("{% url 'ShowApp:showData' %}");#}
+                    alert('登陆成功');
+                    window.locatio.reload()
+                } else if(res == "ERROR"){
+                    alert('用户名或密码错误，请重新输入');
+                    window.locatio.reload()
+                }
+            }
+        })
+    }
+    function regist() {
+        alert('跳转注册页面');
+        {#location.href("{% url 'registPage' %}")#}
+    }
+
+</script>
