@@ -20,9 +20,7 @@ class Log:
         url = args[0].path
         logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         logging.info(ip + url)
-        return self.logic(args[0])
-
-
+        return self.logic(self,args[0])
 
 
 
@@ -30,7 +28,7 @@ class MyMiddleAware(MiddlewareMixin):
 
     @Log
     def process_request(self, request):
-        redis = Redis(host='172.16.13.196', port=7004)
+        redis = Redis(host='172.16.13.196', port=7007)
         ip = request.get_host()
         try:
             flag = int(redis.get(ip + 'flag'))

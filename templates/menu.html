@@ -85,13 +85,13 @@
 
 {#							<input type="button" value="首页" class="ui_input_btn01" />#}
                             {% if page.has_previous %}
-                                <a href="{% url 'ShowApp:showMenu' %}?num={{ page.previous_page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="上一页" class="ui_input_btn01"/></a>
+                                <a href="{% url 'show:data' %}?num={{ page.previous_page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="上一页" class="ui_input_btn01"/></a>
                             {% endif %}
                             {% for page_number in page.paginator.page_range %}
-                                <a href="{% url 'ShowApp:showMenu' %}?num={{ page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="{{ page_number }}" class="ui_input_btn01"/></a>
+                                <a href="{% url 'show:data' %}?num={{ page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="{{ page_number }}" class="ui_input_btn01"/></a>
                             {% endfor %}
                             {% if page.has_next %}
-                                <a href="{% url 'ShowApp:showMenu' %}?num={{ page.next_page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="下一页" class="ui_input_btn01"/></a>
+                                <a href="{% url 'show:data' %}?num={{ page.next_page_number }}&city={{ city }}&position={{ position }}"><input type="button" value="下一页" class="ui_input_btn01"/></a>
                             {% endif %}
 
 {#							<input type="button" value="尾页" class="ui_input_btn01"#}
@@ -114,13 +114,13 @@
         }
     function jumpInputPage() {
         var page = document.getElementById("jumpNumTxt").value;
-        location.href="{% url 'ShowApp:showMenu' %}?num="+page+"&city={{ city }}&position={{ position }}"
+        location.href="{% url 'show:data' %}?num="+page+"&city={{ city }}&position={{ position }}"
     }
     function search() {
             {#var baseInfo = document.getElementById("fyXq").value;#}
             var position = document.getElementById("fyZldz").value;
             alert(baseInfo,position)
-            xhr.open('post',"{% url 'ShowApp:keywordQuery'%}",true);
+            xhr.open('post',"{% url 'show:keywordQuery'%}",true);
             xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             xhr.setRequestHeader("X-CSRFToken",'{{ csrf_token }}');
             xhr.send('position='+position);

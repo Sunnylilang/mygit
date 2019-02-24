@@ -16,9 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-import login_app.urls
+import captchaApp.urls
+import registApp.urls
+import showApp.urls
+import loginApp.urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/',include((login_app.urls,'login')))
+    path('login/', include((loginApp.urls, 'login'))),
+    path('regist/', include((registApp.urls, 'regist'))),
+    path('captcha/', include((captchaApp.urls, 'captcha'))),
+    path('show/', include((showApp.urls, 'show'))),
 ]

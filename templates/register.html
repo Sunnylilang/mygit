@@ -27,13 +27,13 @@
 <div class="log">
 	<div class="content2">
 		<h2>Register</h2>
-		<form id="userInfo" method="post" action="{% url 'registerAction' %}">
+		<form id="userInfo" method="post" action="{% url 'regist:action' %}">
             {% csrf_token %}
             <input type="text"  name="userid" placeholder="USERNAME" onfocus="userFocus()" onblur="userChecking()"><span><img id="userAjax" class="ajaximg" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="userAjaxText"></span></span>
 			<input type="tel" name="usrtel" placeholder="PHONE" onfocus="phoneFocus()" onblur="telephonechecking()"><img id="phoneAjax" class="ajaximg" style="display:none" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="phoneAjaxText"></span>
 			<input type="email" name="email" placeholder="EMAIL ADDRESS" onfocus="emailFocus()" onblur="emailchecking()"><img class="ajaximg" id="emailAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="emailAjaxText"></span>
 			<input type="password" name="psw" placeholder="PASSWORD(6~16 letters and number)" onfocus="pwdFocus()" onblur="pwdchecking()"><img  class="ajaximg" id="pwdAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="pwdAjaxText"></span>
-            <input type="text" style="width:100px;float: left;margin-left: 47px;" name="captcha" onfocus="capFocus()" onblur="capchecking()"><a onclick="capchange()" href="javascript:void(0);"><img style="float: left;position: relative;top: 15px;margin-left: 69px" id="captchaPic" src="{% url 'getCaptcha' %}"></a><img  class="ajaximg"  id="capAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="capAjaxText"></span>
+            <input type="text" style="width:100px;float: left;margin-left: 47px;" name="captcha" onfocus="capFocus()" onblur="capchecking()"><a onclick="capchange()" href="javascript:void(0);"><img style="float: left;position: relative;top: 15px;margin-left: 69px" id="captchaPic" src="{% url 'captcha:getCaptcha' %}"></a><img  class="ajaximg"  id="capAjax" style="display:none;" src="{% static 'images/runningchecking.gif' %}" ><span class="ajaxText" id="capAjaxText"></span>
 			<input onclick= "submitInfo()" type="button" class="register" value="Register">
 		</form>
 	</div>
@@ -107,7 +107,7 @@
             }else if(window.ActiveXObject){
                 xhr=new ActiveXObject("Microsoft.XMLHTTP")
             }
-            xhr.open('post',"{% url 'registerChecking' %}",true);
+            xhr.open('post',"{% url 'regist:check' %}",true);
             xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             xhr.send("userid="+userid+"&csrfmiddlewaretoken="+"{{ csrf_token }}");
             xhr.onreadystatechange=function () {
@@ -207,7 +207,7 @@
                 xhr=new ActiveXObject("Microsoft.XMLHTTP")
             }
           if (yourcode!=''){
-        xhr.open("get","{% url 'captchaChecking' %}?yourcode="+yourcode,true);
+        xhr.open("get","{% url 'captcha:checkCaptcha' %}?yourcode="+yourcode,true);
         xhr.send();
         xhr.onreadystatechange=function () {
                 if (xhr.status==200 && xhr.readyState==4){
@@ -233,7 +233,7 @@
 
     function capchange() {
         var captPic=document.getElementById("captchaPic");
-        captPic.src="{% url 'getCaptcha' %}?"+new Date().getTime();
+        captPic.src="{% url 'captcha:getCaptcha' %}?"+new Date().getTime();
 
     }
 
